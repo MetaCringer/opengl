@@ -7,7 +7,7 @@ IDIR=include
 ODIR=build/obj
 
 CFLAGS=-I$(IDIR)
-LIBS=-lm
+LIBS= -I/usr/local/include -L/usr/local/lib -lglfw3 -lGL -lX11 -lXxf86vm -lXrandr -pthread -lXi -ldl -lm
 
 _DEPS = main.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
@@ -21,6 +21,8 @@ init:
 	mkdir -p build/temp
 	mkdir -p build/cmake
 
+glad:
+	cd build/temp 
 build/temp/glfw-$(GLFW_VERSION)/:
 	cd build/temp/ \
 	&& wget https://github.com/glfw/glfw/releases/download/$(GLFW_VERSION)/glfw-$(GLFW_VERSION).zip \
@@ -33,21 +35,21 @@ build/cmake/bin/cmake:
 	&& chmod +x cmake-$(CMAKE_VERSION)-linux-x86_64.sh \
 	&& ./cmake-$(CMAKE_VERSION)-linux-x86_64.sh --skip-license --prefix=../cmake/ \
 	&& rm -f cmake-$(CMAKE_VERSION)-linux-x86_64.sh*
-build/cmake/src/Makefile: build/cmake/bin/cmake build/temp/glfw-$(GLFW_VERSION)/
-	cd build/cmake \
-	&& bin/cmake ../temp/glfw-$(GLFW_VERSION)/ 
-/usr/local/lib/libglfw3.a: build/cmake/src/Makefile
-	cd build/cmake/src \
+build/Makefile: build/cmake/bin/cmake build/temp/glfw-$(GLFW_VERSION)/
+	cd build \
+	&& cmake/bin/cmake temp/glfw-$(GLFW_VERSION)/ 
+/usr/local/lib/libglfw3.a: build/Makefile
+	cd build/ \
 	&& sudo make install
 
 install-dependencies-Linux: /usr/local/lib/libglfw3.a
 	
 install-dependencies: init install-dependencies-$(OS)
 	
-
-
+install-glfw3:
+	sudo apt install -y libglfw3-dev
 	
-$(ODIR)/%.o: $(source_dir)/%.c $(DEPS) init
+$(ODIR)/%.o: $(source_dir)/%.c $(DEPS) init install-glfw3
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 build: $(OBJ)
