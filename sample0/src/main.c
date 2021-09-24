@@ -1,6 +1,7 @@
 #define GLFW_INCLUDE_NONE
 #include<stdio.h>
 #include<GLFW/glfw3.h>
+#include <glad/glad.h>
 
 int width=640, height=480;
 double time;
@@ -23,6 +24,21 @@ void window_resize_callback(GLFWwindow* window, int width, int height){
 }
 
 
+float vertices[] = {
+    0.0f,  0.5f, // Vertex 1 (X, Y)
+    0.5f, -0.5f, // Vertex 2 (X, Y)
+    -0.5f, -0.5f  // Vertex 3 (X, Y)
+};
+
+static const char* vertex_shader_text=
+"#version 150 core\n"
+"in vec2 position;\n"
+"void main()\n"
+"{\n"
+"    gl_Position = vec4(position, 0.0, 1.0);\n"
+"}";
+
+
 int main(){
     GLFWwindow* window;
     
@@ -43,7 +59,7 @@ int main(){
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
-    window_resize_callback(window, width, height)
+    window_resize_callback(window, width, height);
 
 
 
@@ -55,10 +71,12 @@ int main(){
 
     glfwSetKeyCallback(window, key_callback);
 
-    glfwSetFramebufferSizeCallback(window_resize_callback);
+    glfwSetFramebufferSizeCallback(window, window_resize_callback);
 
-    
-
+    GLuint vbo;
+    glGenBuffers(3, &vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
