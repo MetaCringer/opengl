@@ -7,12 +7,12 @@ IDIR=include
 ODIR=build/obj
 
 CFLAGS=-I$(IDIR)
-LIBS= -I/usr/local/include -L/usr/local/lib -lglfw3 -lGL -lX11 -lXxf86vm -lXrandr -pthread -lXi -ldl -lm
+LIBS= -I/usr/local/include -L/usr/local/lib -lglfw3 -lGL -lX11  -lXrandr -pthread -ldl -lm -lXxf86vm -lXi
 
-_DEPS = main.h
+_DEPS = main.h glad/glad.h KHR/khrplatform.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = main.o 
+_OBJ = main.o glad.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 GLFW_VERSION=3.3.4
 CMAKE_VERSION=3.21.3
@@ -46,10 +46,10 @@ install-dependencies-Linux: /usr/local/lib/libglfw3.a
 	
 install-dependencies: init install-dependencies-$(OS)
 	
-install-glfw3:
+install-package:
 	sudo apt install -y libglfw3-dev
-	
-$(ODIR)/%.o: $(source_dir)/%.c $(DEPS) init install-glfw3
+	sudo apt install -y xorg-dev
+$(ODIR)/%.o: $(source_dir)/%.c $(DEPS) init install-package
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 build: $(OBJ)

@@ -2,6 +2,7 @@
 #include<stdio.h>
 #include<GLFW/glfw3.h>
 #include <glad/glad.h>
+#include<GL/gl.h>
 
 int width=640, height=480;
 double time;
@@ -48,6 +49,8 @@ int main(){
     if (!glfwInit())
         return -1;
 
+
+
     /* Create a windowed mode window and its OpenGL context */
     window = glfwCreateWindow(width, height, "Hello World", NULL, NULL);
     if (!window)
@@ -59,7 +62,19 @@ int main(){
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
-    window_resize_callback(window, width, height);
+    if(!gladLoadGL())
+        return -1;
+
+    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+        printf("Failed to initialize OpenGL context\n");
+        return -1;
+    }
+
+
+
+
+
+    //window_resize_callback(window, width, height);
 
 
 
@@ -74,7 +89,7 @@ int main(){
     glfwSetFramebufferSizeCallback(window, window_resize_callback);
 
     GLuint vbo;
-    glGenBuffers(3, &vbo);
+    glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     /* Loop until the user closes the window */
@@ -83,7 +98,6 @@ int main(){
         time = glfwGetTime();
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
-
         
 
         /* Swap front and back buffers */
