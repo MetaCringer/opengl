@@ -1,24 +1,33 @@
-CC=gcc
-source_dir=src
-path_program=build/
-name_program=program
-OS=Linux
-IDIR=include
-ODIR=build/obj
+CC=$(MAKE_CC:-gcc)
+source_dir=$(MAKE_SOURCE_DIR:-src)
+path_program=$(MAKE_PATH_PROGRAM:-build/)
+name_program=$(MAKE_NAME_PROGRAM:-program)
+OS=$(MAKE_OS:-Linux)
+IDIR=$(MAKE_IDIR:-include)
+ODIR=$(MAKE_ODIR:-build/obj)
 
 CFLAGS=-I$(IDIR)
-LIBS= -I/usr/local/include -L/usr/local/lib -lglfw3 -lGL -lX11  -lXrandr -pthread -ldl -lm -lXxf86vm -lXi
+LIBS=-I/usr/local/include -L/usr/local/lib -lglfw3 -lGL -lX11  -lXrandr -pthread -ldl -lm -lXxf86vm -lXi $(MAKE_LIBS)
 
-_DEPS = main.h glad/glad.h KHR/khrplatform.h
-DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
+_DEPS= main.h glad/glad.h KHR/khrplatform.h $(MAKE_HEADERS)
+DEPS= $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = main.o glad.o
-OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
-GLFW_VERSION=3.3.4
-CMAKE_VERSION=3.21.3
+_OBJ= main.o glad.o $(MAKE_OBJECTS)
+OBJ= $(patsubst %,$(ODIR)/%,$(_OBJ))
+GLFW_VERSION=$(MAKE_GLFW_VERSION:-3.3.4)
+CMAKE_VERSION=$(MAKE_CMAKE_VERSION:-3.21.3)
+GLSL_VERSION=1.30
+GL_VERSION=4.20
+
+
+
+help:
+	print "Makefile of opengl project"
+	print ""
+
 init:
-	mkdir -p build/obj
-	mkdir -p build/temp
+	mkdir -p $(ODIR)
+	mkdir -p $(path_program)
 	mkdir -p build/cmake
 
 glad:

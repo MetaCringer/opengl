@@ -32,12 +32,14 @@ float vertices[] = {
 };
 
 static const char* vertex_shader_text=
-"#version 150 core\n"
+"#version 420 core\n"
 "in vec2 position;\n"
 "void main()\n"
 "{\n"
 "    gl_Position = vec4(position, 0.0, 1.0);\n"
 "}";
+
+
 
 
 int main(){
@@ -77,7 +79,9 @@ int main(){
     //window_resize_callback(window, width, height);
 
 
-
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 
     /* Bindings callbacks */
@@ -92,6 +96,22 @@ int main(){
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+
+    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexShader, 1, &vertex_shader_text, NULL);
+
+    glCompileShader(vertexShader);
+
+    GLint status;
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &status);
+    
+    char buffer[512];
+    glGetShaderInfoLog(vertexShader, 512, NULL, buffer);
+
+    printf("%s\n",buffer);
+
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
