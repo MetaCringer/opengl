@@ -23,6 +23,22 @@ GL_VERSION=4.20
 
 help:
 	print "Makefile of opengl project"
+	print "Environment variables that can be set up into .env file:"
+	print "MAKE_SOURCE_DIR"
+	print "MAKE_PATH_PROGRAM"
+	print "MAKE_NAME_PROGRAM"
+	print "MAKE_OS"
+	print "MAKE_IDIR"
+	print "MAKE_ODIR"
+	print "MAKE_LIBS"
+	print "MAKE_HEADERS"
+	print "MAKE_OBJECTS"
+	print "MAKE_GLFW_VERSION"
+	print "MAKE_CMAKE_VERSION"
+	print ""
+	print ""
+	print ""
+	print ""
 	print ""
 
 init:
