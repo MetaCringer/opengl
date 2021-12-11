@@ -1,29 +1,10 @@
 #define GLFW_INCLUDE_NONE
 #include<stdio.h>
-#include<GLFW/glfw3.h>
-#include <glad/glad.h>
+#include <GL/glut.h>
 #include<GL/gl.h>
 
 int width=640, height=480;
 double time;
-
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
-    
-}
-
-void error_callback(int error, const char* description)
-{
-    fprintf(stderr, "Error: %s\n", description);
-}
-
-void window_resize_callback(GLFWwindow* window, int width, int height){
-    glfwGetFramebufferSize(window, &width, &height);
-    glViewport(0, 0, width, height);
-}
-
 
 float vertices[] = {
     0.0f,  0.5f, // Vertex 1 (X, Y)
@@ -39,94 +20,41 @@ static const char* vertex_shader_text=
 "    gl_Position = vec4(position, 0.0, 1.0);\n"
 "}";
 
+void init(void)
+{
+    // select clearing (background) color   
+    glClearColor(0.0, 0.0, 0.0, 0.0);
 
+    // initialize viewing values
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0.0,1.0,0.0,1.0,-1.0,1.0);
+}
 
+void display(){
+      // clear all pixels
+    glClear(GL_COLOR_BUFFER_BIT);
 
-int main(){
-    GLFWwindow* window;
-    
+    //  draw white polygon with corners at (0.25,0.25,0.0) and (0.75,0.75,0.0)    
+    glColor3f(1.0,1.0,1.0);
+    glBegin(GL_POLYGON);
+        glVertex3f(0.25,0.25,0.0);
+        glVertex3f(0.75,0.25,0.0);
+        glVertex3f(0.75,0.75,0.0);
+        glVertex3f(0.25,0.75,0.0);
+    glEnd();   
 
-    
-    /* Initialize the library */
-    if (!glfwInit())
-        return -1;
+    // don't wait, start processing buffered OpenGL routines
+    glFlush();
+}
 
-
-
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(width, height, "Hello World", NULL, NULL);
-    if (!window)
-    {
-        glfwTerminate();
-        return -1;
-    }
-
-    /* Make the window's context current */
-    glfwMakeContextCurrent(window);
-
-    if(!gladLoadGL())
-        return -1;
-
-    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
-        printf("Failed to initialize OpenGL context\n");
-        return -1;
-    }
-
-
-
-
-
-    //window_resize_callback(window, width, height);
-
-
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-
-    /* Bindings callbacks */
-    
-    glfwSetErrorCallback(error_callback);
-
-    glfwSetKeyCallback(window, key_callback);
-
-    glfwSetFramebufferSizeCallback(window, window_resize_callback);
-
-    GLuint vbo;
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-
-    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertex_shader_text, NULL);
-
-    glCompileShader(vertexShader);
-
-    GLint status;
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &status);
-    
-    char buffer[512];
-    glGetShaderInfoLog(vertexShader, 512, NULL, buffer);
-
-    printf("%s\n",buffer);
-
-
-    /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
-    {
-        time = glfwGetTime();
-        /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
-        
-
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
-
-        /* Poll for and process events */
-        glfwPollEvents();
-    }
-
-    glfwTerminate();
-    return 0;
+int main(int argc, char** argv){
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    glutInitWindowSize(250,250);
+    glutInitWindowPosition(100,100);
+    glutCreateWindow("Hello");
+    init();
+    glutDisplayFunc(display);
+    glutMainLoop();
 }

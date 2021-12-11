@@ -1,0 +1,1 @@
+/usr/bin/cc   -rdynamic CMakeFiles/sample0.dir/src/main.c.o  -o sample0  -lGL -lGLU -lglut 

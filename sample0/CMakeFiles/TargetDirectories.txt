@@ -1,0 +1,3 @@
+/home/metacringer/workspace/code/home/opengl/sample0/CMakeFiles/rebuild_cache.dir
+/home/metacringer/workspace/code/home/opengl/sample0/CMakeFiles/edit_cache.dir
+/home/metacringer/workspace/code/home/opengl/sample0/CMakeFiles/sample0.dir
