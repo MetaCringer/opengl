@@ -12,14 +12,6 @@ float vertices[] = {
     -0.5f, -0.5f  // Vertex 3 (X, Y)
 };
 
-static const char* vertex_shader_text=
-"#version 420 core\n"
-"in vec2 position;\n"
-"void main()\n"
-"{\n"
-"    gl_Position = vec4(position, 0.0, 1.0);\n"
-"}";
-
 void init(void)
 {
     // select clearing (background) color   
