@@ -1,8 +1,0 @@
-build-essential
-cmake
-make
-libgl1-mesa-dev
-xorg-dev
-libxinerama-dev
-libxcursor-dev
-libxi-dev
