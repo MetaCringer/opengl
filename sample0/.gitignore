@@ -1,0 +1,4 @@
+/CMakeFiles/*
+/*.a
+/ogl_program
+/cmake_install.cmake
