@@ -1,6 +1,0 @@
-build
-cmake-*-linux-x86_64
-.env*
-.env
-Makefile
-CMakeCache.txt
