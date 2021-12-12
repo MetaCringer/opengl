@@ -56,16 +56,29 @@ CMAKE_BINARY_DIR = /home/metacringer/workspace/code/home/opengl/sample0
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
 
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
+# Special rule for the target install/strip
+install/strip/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip/fast
 
-.PHONY : rebuild_cache/fast
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
 
 # Special rule for the target edit_cache
 edit_cache:
@@ -77,6 +90,39 @@ edit_cache:
 edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
+
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install
+
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install/fast
+
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+
+.PHONY : list_install_components/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -111,17 +157,96 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named sample0
+# Target rules for targets named glad
 
 # Build rule for target.
-sample0: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 sample0
-.PHONY : sample0
+glad: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 glad
+.PHONY : glad
 
 # fast build rule for target.
-sample0/fast:
-	$(MAKE) -f CMakeFiles/sample0.dir/build.make CMakeFiles/sample0.dir/build
-.PHONY : sample0/fast
+glad/fast:
+	$(MAKE) -f CMakeFiles/glad.dir/build.make CMakeFiles/glad.dir/build
+.PHONY : glad/fast
+
+#=============================================================================
+# Target rules for targets named ogl_program
+
+# Build rule for target.
+ogl_program: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 ogl_program
+.PHONY : ogl_program
+
+# fast build rule for target.
+ogl_program/fast:
+	$(MAKE) -f CMakeFiles/ogl_program.dir/build.make CMakeFiles/ogl_program.dir/build
+.PHONY : ogl_program/fast
+
+#=============================================================================
+# Target rules for targets named uninstall
+
+# Build rule for target.
+uninstall: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 uninstall
+.PHONY : uninstall
+
+# fast build rule for target.
+uninstall/fast:
+	$(MAKE) -f libs/glfw/CMakeFiles/uninstall.dir/build.make libs/glfw/CMakeFiles/uninstall.dir/build
+.PHONY : uninstall/fast
+
+#=============================================================================
+# Target rules for targets named update_mappings
+
+# Build rule for target.
+update_mappings: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 update_mappings
+.PHONY : update_mappings
+
+# fast build rule for target.
+update_mappings/fast:
+	$(MAKE) -f libs/glfw/src/CMakeFiles/update_mappings.dir/build.make libs/glfw/src/CMakeFiles/update_mappings.dir/build
+.PHONY : update_mappings/fast
+
+#=============================================================================
+# Target rules for targets named glfw
+
+# Build rule for target.
+glfw: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 glfw
+.PHONY : glfw
+
+# fast build rule for target.
+glfw/fast:
+	$(MAKE) -f libs/glfw/src/CMakeFiles/glfw.dir/build.make libs/glfw/src/CMakeFiles/glfw.dir/build
+.PHONY : glfw/fast
+
+libs/glad/src/glad.o: libs/glad/src/glad.c.o
+
+.PHONY : libs/glad/src/glad.o
+
+# target to build an object file
+libs/glad/src/glad.c.o:
+	$(MAKE) -f CMakeFiles/glad.dir/build.make CMakeFiles/glad.dir/libs/glad/src/glad.c.o
+.PHONY : libs/glad/src/glad.c.o
+
+libs/glad/src/glad.i: libs/glad/src/glad.c.i
+
+.PHONY : libs/glad/src/glad.i
+
+# target to preprocess a source file
+libs/glad/src/glad.c.i:
+	$(MAKE) -f CMakeFiles/glad.dir/build.make CMakeFiles/glad.dir/libs/glad/src/glad.c.i
+.PHONY : libs/glad/src/glad.c.i
+
+libs/glad/src/glad.s: libs/glad/src/glad.c.s
+
+.PHONY : libs/glad/src/glad.s
+
+# target to generate assembly for a file
+libs/glad/src/glad.c.s:
+	$(MAKE) -f CMakeFiles/glad.dir/build.make CMakeFiles/glad.dir/libs/glad/src/glad.c.s
+.PHONY : libs/glad/src/glad.c.s
 
 src/main.o: src/main.c.o
 
@@ -129,7 +254,7 @@ src/main.o: src/main.c.o
 
 # target to build an object file
 src/main.c.o:
-	$(MAKE) -f CMakeFiles/sample0.dir/build.make CMakeFiles/sample0.dir/src/main.c.o
+	$(MAKE) -f CMakeFiles/ogl_program.dir/build.make CMakeFiles/ogl_program.dir/src/main.c.o
 .PHONY : src/main.c.o
 
 src/main.i: src/main.c.i
@@ -138,7 +263,7 @@ src/main.i: src/main.c.i
 
 # target to preprocess a source file
 src/main.c.i:
-	$(MAKE) -f CMakeFiles/sample0.dir/build.make CMakeFiles/sample0.dir/src/main.c.i
+	$(MAKE) -f CMakeFiles/ogl_program.dir/build.make CMakeFiles/ogl_program.dir/src/main.c.i
 .PHONY : src/main.c.i
 
 src/main.s: src/main.c.s
@@ -147,7 +272,7 @@ src/main.s: src/main.c.s
 
 # target to generate assembly for a file
 src/main.c.s:
-	$(MAKE) -f CMakeFiles/sample0.dir/build.make CMakeFiles/sample0.dir/src/main.c.s
+	$(MAKE) -f CMakeFiles/ogl_program.dir/build.make CMakeFiles/ogl_program.dir/src/main.c.s
 .PHONY : src/main.c.s
 
 # Help Target
@@ -156,9 +281,20 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... rebuild_cache"
+	@echo "... install/strip"
+	@echo "... install/local"
 	@echo "... edit_cache"
-	@echo "... sample0"
+	@echo "... glad"
+	@echo "... install"
+	@echo "... list_install_components"
+	@echo "... rebuild_cache"
+	@echo "... ogl_program"
+	@echo "... uninstall"
+	@echo "... update_mappings"
+	@echo "... glfw"
+	@echo "... libs/glad/src/glad.o"
+	@echo "... libs/glad/src/glad.i"
+	@echo "... libs/glad/src/glad.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

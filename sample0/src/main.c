@@ -1,21 +1,25 @@
-#define GLFW_INCLUDE_NONE
 #include<stdio.h>
-#include <GL/glut.h>
+#include<glad/glad.h>
+#include<GLFW/glfw3.h>
 #include<GL/gl.h>
 
 int width=640, height=480;
 double time;
-
+GLFWwindow* window;
 
 void init(void)
 {
-    // select clearing (background) color   
+    // select clearing (background) color 
+      
     glClearColor(0.0, 0.0, 0.0, 0.0);
-
+    printf("glClearColor(0.0, 0.0, 0.0, 0.0);\n");
     // initialize viewing values
     glMatrixMode(GL_PROJECTION);
+    printf("glMatrixMode(GL_PROJECTION);\n");
     glLoadIdentity();
+    printf("glLoadIdentity();\n");
     glOrtho(0.0,1.0,0.0,1.0,-1.0,1.0);
+    printf("glOrtho(0.0,1.0,0.0,1.0,-1.0,1.0);\n");
 }
 
 double dx(int x){
@@ -49,12 +53,42 @@ void display(){
 }
 
 int main(int argc, char** argv){
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-    glutInitWindowSize(250,250);
-    glutInitWindowPosition(100,100);
-    glutCreateWindow("Hello");
+    printf("GLFW init ...'\n");
+    if (!glfwInit()){
+        return -1;
+    }
+    printf("GLFW init done\n");
+    
+
+    printf("Creating window ...\n");
+    window = glfwCreateWindow(640, 480, "Окно", NULL, NULL);
+    if (!window)
+    {
+        printf("window wasnt created\n");
+        glfwTerminate();
+        return -1;
+    }
+    printf("window was created\n");
+    printf("Bind GL context to window ...");
+    glfwMakeContextCurrent(window);
+    printf("Successfull\n");
+    printf("GLAD init ...'\n");
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        printf("Failed to initialize GLAD\n");
+        return -1;
+    }
+    printf("GLAD init done\n");
+    printf("Init ...\n");
     init();
-    glutDisplayFunc(display);
-    glutMainLoop();
+    printf("Init done\n");
+    while (!glfwWindowShouldClose(window))
+    {
+        display();
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+    
+    glfwTerminate();
+    return 0;
 }
