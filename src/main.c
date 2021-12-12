@@ -5,7 +5,7 @@
 #include<GL/gl.h>
 
 int width=640, height=480;
-const int webHeight=5,webWidth=webHeight*2 ;
+const int webHeight=6,webWidth=webHeight*2 ;
 double time;
 GLFWwindow* window;
 double windowRatio;
@@ -16,40 +16,69 @@ double x1, x2, y1, y2;
 
 
 double dx(int x){
-    printf("%lf\n",(((double)x+1)/webWidth));
-    return (x+1)/webWidth;
+    return ((double)x+1)/webWidth;
 }
 
 double dy(int y){
-    printf("%lf\n",(((double)y+1)/webHeight));
-    return (y+1)/webHeight;
+    return ((double)y+1)/webHeight;
 }
 void pushVertex(int x, int y){
-    
     glVertex3f(dx(x),dy(y),0.0);
+}
+
+void drawWeb(){
+    glColor3f(0.4,0.4,0.4);
+    glLineWidth(1);
+    glEnable(GL_LINE_STIPPLE);
+    glLineStipple(1,0x00ff);
+    glBegin(GL_LINES);
+    for (int i = 1; i < webWidth; i++)
+    {
+        glVertex3f(((double)i)/webWidth,0.0,0.0);
+        glVertex3f(((double)i)/webWidth,1.0,0.0);
+    }
+    for (int i = 1; i < height; i++)
+    {
+        glVertex3f(0.0,((double)i)/((double)webHeight),0.0);
+        glVertex3f(1.0,((double)i)/((double)webHeight),0.0);
+    }
+    
+    glEnd();
+    glDisable(GL_LINE_STIPPLE);
 }
 
 void display(){
       // clear all pixels
-    glClear(GL_COLOR_BUFFER_BIT);
-
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
     //  draw white polygon with corners at (0.25,0.25,0.0) and (0.75,0.75,0.0)    
+    
+    
+    drawWeb();
     glColor3f(1.0,1.0,1.0);
+    glLineWidth(4);
     glBegin(GL_LINE_STRIP);
     for (int i = 0; i < sizeVertexBuffer; i++)
     {
         pushVertex(VertexBuffer[i*2],VertexBuffer[i*2+1]);
     }
+    pushVertex(VertexBuffer[0],VertexBuffer[1]);
     glEnd();
+
+    glPointSize(10.0);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_NOTEQUAL, 0);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_POINT_SMOOTH);
+    glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
     
-    glBegin(GL_POINT);
+    glBegin(GL_POINTS);
     for (int i = 0; i < sizeVertexBuffer; i++)
     {
         pushVertex(VertexBuffer[i*2]+webHeight,VertexBuffer[i*2+1]);
     }
     glEnd();
-
-    // don't wait, start processing buffered OpenGL routines
     glFlush();
 }
 
@@ -61,31 +90,29 @@ void loadConfig(char * filename){
     for (int i = 0; i < sizeVertexBuffer; i++)
     {
         fscanf(config,"%d %d\n",&VertexBuffer[i*2],&VertexBuffer[i*2+1]);
-        
     }
     
     fclose(config);
 }
 void init(void)
 {
-    // select clearing (background) color 
     glViewport(0, 0, width, height);
-    glClearColor(0.0, 0.0, 0.0, 0.0);
-    // initialize viewing values
+    glClearColor(0.2, 0.2, 0.2, 0.0);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0.0,1.0,0.0,1.0,-1.0,1.0);
-    glTranslatef(-1.5f,0.0f,-6.0f);  
-    windowRatio = width/height;
-
+    //float aspect = (float)width / (float)height;
+    glOrtho(0,1,0,1.0,-1.0,1.0);
+    glfwSetWindowAspectRatio(window, 16, 9);
+    glfwSetWindowOpacity(window, 0.8f);
 
     loadConfig("config.txt");
-
-
 }
 
 
-
+GLvoid OnResize(GLFWwindow* window, int width, int height){
+    glViewport(0, 0, width, height);
+   
+}
 
 
 int main(int argc, char** argv){
@@ -118,6 +145,7 @@ int main(int argc, char** argv){
     printf("Init ...\n");
     init();
     printf("Init done\n");
+    glfwSetWindowSizeCallback(window, OnResize);
     while (!glfwWindowShouldClose(window))
     {
         display();
