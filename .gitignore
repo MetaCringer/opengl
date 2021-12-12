@@ -1,9 +1,0 @@
-build
-cmake-*-linux-x86_64
-.env*
-.env
-sample0/Makefile
-*CMakeCache.txt
-*CMakeFiles
-*.dir
-*a
